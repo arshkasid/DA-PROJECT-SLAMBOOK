@@ -162,7 +162,7 @@ class PostEditView(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
 class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
 
     model = Post
-    template_name = 'social/post_delete.html'
+    template_name = 'social/remove_post.html'
     success_url = reverse_lazy('post-list')
 
     def test_func(self):
@@ -174,7 +174,7 @@ class PostDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
 class CommentDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
 
     model = Comment
-    template_name = 'social/comment_delete.html'
+    template_name = 'social/remove_comment.html'
     
     #redirect back 
     def get_success_url(self):
@@ -436,7 +436,7 @@ class ListThreads(View):
 
         return render(request, 'social/inbox.html', context)
 
-class CreateThread(View):
+class MakeThread(View):
     def get(self, request, *args, **kwargs):
         form = ThreadForm()
 
@@ -444,7 +444,7 @@ class CreateThread(View):
             'form': form
         }
 
-        return render(request, 'social/create_thread.html', context)
+        return render(request, 'social/new_thread.html', context)
 
     def post(self, request, *args, **kwargs):
         form = ThreadForm(request.POST)
@@ -472,7 +472,7 @@ class CreateThread(View):
             messages.error(request, 'Invalid username')
             return redirect('create-thread')
 
-class ThreadView(View):
+class Thread(View):
     def get(self, request, pk, *args, **kwargs):
         form = MessageForm()
         thread = ThreadModel.objects.get(pk=pk)
@@ -510,7 +510,7 @@ class CreateMessage(View):
         return redirect('thread', pk=pk)
 
 
-class SharedPostView(View):
+class SharedPost(View):
     def post(self, request, pk, *args, **kwargs):
        original_post = Post.objects.get(pk=pk)
        form = ShareForm(request.POST)

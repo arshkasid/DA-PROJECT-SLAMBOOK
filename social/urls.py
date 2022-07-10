@@ -1,7 +1,7 @@
 #importing path and view
 
 from django.urls import path
-from .views import PostListView, PostDetailView, PostEditView, PostDeleteView ,CommentDeleteView,ProfileView,ProfileEditView,AddFollower,RemoveFollower,AddDislike,AddLike,UserSearch,ListFollowers,ListThreads,CreateThread,CreateMessage,ThreadView,  PostNotification, FollowNotification, RemoveNotification, ThreadNotification, SharedPostView
+from .views import PostListView, PostDetailView, PostEditView, PostDeleteView ,CommentDeleteView,ProfileView,ProfileEditView,AddFollower,RemoveFollower,AddDislike,AddLike,UserSearch,ListFollowers,ListThreads,MakeThread,CreateMessage,Thread,  PostNotification, FollowNotification, RemoveNotification, ThreadNotification, SharedPost
 
 
 #creating url patterns for views we just created
@@ -62,15 +62,15 @@ urlpatterns=[
     path('inbox/', ListThreads.as_view(), name='inbox'),
 
     # url to create a new thread
-    path('inbox/create-thread/', CreateThread.as_view(), name='create-thread'),
+    path('inbox/create-thread/', MakeThread.as_view(), name='create-thread'),
 
     # url to view a thread
-    path('inbox/<int:pk>/', ThreadView.as_view(), name='thread'),
+    path('inbox/<int:pk>/', Thread.as_view(), name='thread'),
 
     # url ro create new messages
     path('inbox/<int:pk>/create-message/', CreateMessage.as_view(), name='create-message'),
 
     # url for shared posts
-    path('post/<int:pk>/share', SharedPostView.as_view(), name='share-post'),
+    path('post/<int:pk>/share', SharedPost.as_view(), name='share-post'),
 
 ]
