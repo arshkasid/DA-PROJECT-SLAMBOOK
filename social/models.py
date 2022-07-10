@@ -32,6 +32,33 @@ class Post(models.Model):
     shared_body = models.TextField(blank=True, null=True)
     shared_on = models.DateTimeField(blank=True, null=True)
     shared_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='+')
+    tags = models.ManyToManyField('Tag', blank=True)
+
+
+    def create_tags(self):
+        for word in self.body.split():
+            if (word[0] == '#'):
+                tag = Tag.objects.filter(name=word[1:]).first()
+                if tag:
+                    self.tags.add(tag.pk)
+                else:
+                    tag = Tag(name=word[1:])
+                    tag.save()
+                    self.tags.add(tag.pk)
+                    self.save()
+                
+        if self.shared_body:
+            for word in self.shared_body.split():
+                if (word[0] == '#'):
+                    tag = Tag.objects.filter(name=word[1:]).first()
+                    if tag:
+                        self.tags.add(tag.pk)
+                    else:
+                        tag = Tag(name=word[1:])
+                        tag.save()
+                        self.tags.add(tag.pk)
+                    self.save()
+		   
 
     class Meta:
         ordering = ['-created_on', '-shared_on']
@@ -41,6 +68,21 @@ class Comment(models.Model):
     created_on= models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey('Post', on_delete=models.CASCADE)
+    tags = models.ManyToManyField('Tag', blank=True)
+
+    def create_tags(self):
+        for word in self.comment.split():
+            if (word[0] == '#'):
+                tag = Tag.objects.get(name=word[1:])
+                if tag:
+                    self.tags.add(tag.pk)
+                else:
+                    tag = Tag(name=word[1:])
+                    tag.save()
+                    self.tags.add(tag.pk)
+                self.save()
+        
+    
 
 
 class UserProfile(models.Model):
@@ -100,6 +142,8 @@ class Notification(models.Model):
 class Image(models.Model):
 	image = models.ImageField(upload_to='uploads/post_photos', blank=True, null=True)
 
+class Tag(models.Model):
+	name = models.CharField(max_length=255)
 
 
 

@@ -113,7 +113,10 @@
                   {% endfor %}
                 </div>
               {% endif %}
-                <p> {{ post.body}} </p>
+
+                <div class='body'>
+                    <p>{{ post.body }}</p>
+                </div>
 
                 <!adding a url so that by clicking each post we can see its specific details>
                 <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>

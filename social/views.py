@@ -69,6 +69,8 @@ class PostListView(LoginRequiredMixin, View):
             new_post.author = request.user #gets the currently signed in user
             new_post.save() #saves new post in database
 
+            new_post.create_tags()
+
             for f in files:
                 img = Image(image=f)
                 img.save()
@@ -119,9 +121,12 @@ class PostDetailView(LoginRequiredMixin,View):
             new_comment.post = post
             new_comment.save()
 
+            new_comment.create_tags()
+
         #taking the Commentobject and saving it to the post
         #on every comment object has a post value, if that matches the post here
         #then we'll take our list and reverse it by created on
+
         comments = Comment.objects.filter(post=post).order_by('-created_on')
 
         notification = Notification.objects.create(notification_type=2, from_user=request.user, to_user=post.author, post=post)
